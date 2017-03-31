@@ -6,7 +6,6 @@
 int main(void){
 	while(1){
 		system(CMD);
-		// open
 		read_data();
 		sleep(5);
 	}

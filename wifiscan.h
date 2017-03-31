@@ -3,10 +3,16 @@ typedef struct{
 	int channel;			// channel number 1 to 13
 	double frequency;		// frequency of this channel
 	char essid[100];		// ESSID of the network
-	double slevel;			// signal level in dBm
+	int slevel;			// signal level in dBm
 }WIFI_INFO;
 
 #define CMD "sudo iwlist wlan0 scan | egrep \"Address|Frequency|ESSID|Quality\" > scan.txt"
+#define DEBUG 1
 
 // function prototypes
-void read_data(void);
+int read_data(void);
+void remove_spaces(char *);
+void get_MAC(char *, unsigned char*);
+double get_freq(char *);
+int get_slevel(char *);
+void get_essid(char *, char *);
