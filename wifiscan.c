@@ -1,9 +1,10 @@
 #include "wifiscan.h"
+#include "screen.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-int read_data(void){
+int read_display(void){
 	FILE *fp;
 	char line[200];
 	int c;
@@ -14,39 +15,41 @@ int read_data(void){
 		return 1;
 	}
 
+#ifndef DEBUG
+	displayBack();		// define in screen
+#endif
+
 	while(fgets(line, 200, fp)!=NULL){
 		remove_spaces(line);
 		if(strncmp(line, "Cell", 4) == 0){
 			c = 0;
 			get_MAC(line, wf.MAC);
-#ifdef DEBUG
-			printf("MAC: %x:%x:%x:%x:%x:%x\t\t", wf.MAC[0], wf.MAC[1], wf.MAC[2], wf.MAC[3], wf.MAC[4], wf.MAC[5]);
-#endif
 		}
 		else{
 			c++;
-			if(c == 1){
+			if(c == 1)
 				wf.frequency =  get_freq(line);
-#ifdef DEBUG
-				printf("Frequency: %.3f\t", wf.frequency);
-#endif
-			}
-			if(c == 2){
+			if(c == 2)
 				wf.slevel = get_slevel(line);
-#ifdef DEBUG
-				printf("Signal level: -%d\t", wf.slevel);
-#endif
-			}
 			if(c == 3){
 				get_essid(line, wf.essid);
 #ifdef DEBUG
-				printf("ESSID: %s\n", wf.essid);
+				displayData(wf);	// define in wifiscan
+#else
+				displayBar(wf.essid, wf.frequency, wf.slevel);		// define in screen
 #endif
 			}
 		}
 	}
-	printf("---------------End Of File--------------\n");
+	resetColors();
 	fclose(fp);
+}
+
+void displayData(WIFI_INFO wf){
+	printf("MAC: %x:%x:%x:%x:%x:%x\t\t", wf.MAC[0], wf.MAC[1], wf.MAC[2], wf.MAC[3], wf.MAC[4], wf.MAC[5]);
+	printf("Frequency: %.3f\t", wf.frequency);
+	printf("Signal level: -%d\t", wf.slevel);
+	printf("ESSID: %s\n", wf.essid);
 }
 
 void get_MAC(char s[], unsigned char mac[]){
@@ -81,7 +84,7 @@ void get_essid(char s[], char essid[]){
 	token = strtok(NULL, "\"");
 	// strtok treats 2 consecutive tokens as 1
 	if(token[0] == '\n')
-		essid[0] = '\0';
+		strcpy(essid, "ErrNoEssid\0");
 	else
 		strcpy(essid, token);
 }
