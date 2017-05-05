@@ -1,8 +1,7 @@
 https://github.com/nnminh171298/wifiscan
 # This is my readme file
 
-Rasberry Pi wifi scanner
-.
+Rasberry Pi wifi scanner.
 This project will turn a rasberry Pi 3 into a wifi scanner.
 
 Table of Content
