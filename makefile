@@ -11,4 +11,4 @@ clean :
 	rm $(OBJ) $(APPNAME)
 
 archive :
-	tar cf wifi.tar *.c *.h makefile
+	tar cf wifi.tar *.c *.h makefile README.md

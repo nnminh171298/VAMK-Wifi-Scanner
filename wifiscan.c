@@ -87,6 +87,7 @@ void get_essid(char s[], char essid[]){
 		strcpy(essid, "ErrNoEssid\0");
 	else
 		strcpy(essid, token);
+	essid[22] = '\0';
 }
 
 void remove_spaces(char s[]){

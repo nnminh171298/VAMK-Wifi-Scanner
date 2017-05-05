@@ -25,50 +25,48 @@ void clearScreen(void){
 
 void displayBar(char *id, double freq, int level){
 	int i, k, ch;
-	ch = (((int)(freq-2.412))*1000)%5+1;		// calculate the channel
-	printf("\n%d", ch);
-	for(i=0; i>level; i-=3){
-		setFGcolor(31-i%7);
-		gotoXY(30+i/3, ch*6+18);
+	ch = (int)((freq-2.412)*1000)/5+1;		// calculate the channel
+	setFGcolor(31+ch%7);
+	for(i=0; i<33-level/3; i++){
+		gotoXY(34-i, ch*6+26);
 		printf("%s", VER);
-		gotoXY(30+i/3, -6+ch*6);
+		gotoXY(34-i, ch*6+2);
 		printf("%s", VER);
 	}
-/*	for(k=0; k<13; k++){
-		gotoXY(30+i, -6+ch*6+k);
-		if(k==0 || k==12)						// 2 corners
+	for(k=0; k<25; k++){
+		gotoXY(34-i, ch*6+2+k);
+		if(k==0 || k==24)						// 2 corners
 			printf("%s", COR);
-		else if(k>1 && strlen(id)>k && k<11)	// from k=2, end when k=10 or string ends
-			printf("%s", id[k-2]);
+		else if(k>1 && k<23 && k<strlen(id)+2)	// from k=2, end when k=23 or string ends
+			printf("%c", id[k-2]);
 		else									// the rest of the cases
 			printf("%s", HOR);
 	}
-*/	fflush(stdout);
+	fflush(stdout);
 }
 
 void displayBack(void){
 	int i, k;
-	for(i=0; i<34; i++){
+	for(i=0; i<34; i+=2){				// print the y-axis
 		gotoXY(i+1, 1);
 		printf("-%2d", i*3);
-		if(i!=0 & !(i%5))
-			for(k=4; k<110; k++){
+/*		if(i!=0 & !(i%5))
+			for(k=4; k<110; k++){		// print the horizontal lines each 15dB
 				gotoXY(i+1, k);
 				printf("-");
 			}
-	}
+*/	}
 	k=0;
-	for(i=0; i<96; i++){
+	for(i=0; i<=96; i++){				// print the x-axis
 		if(i%6 == 0){
 			k++;
 			if(k>2 && k<16){
 				gotoXY(36, i+8);
 				printf("%d", k-2);
 			}
-			i++;
 		}
 		gotoXY(35, i+8);
-		printf("%c", 'i');
+		printf("%s", HOR);
 	}
 	fflush(stdout);
 }
